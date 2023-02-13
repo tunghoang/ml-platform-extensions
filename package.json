@@ -1,0 +1,65 @@
+{
+	"name": "ml-platform-extensions",
+	"version": "0.1.0",
+	"description": "A JupyterLab extension.",
+	"keywords": [
+		"jupyter",
+		"jupyterlab",
+		"jupyterlab-extension"
+	],
+	"homepage": "https://github.com/github_username/ml-platform-extensions",
+	"bugs": {
+		"url": "https://github.com/github_username/ml-platform-extensions/issues"
+	},
+	"license": "BSD-3-Clause",
+	"author": {
+		"name": "MrYasuo",
+		"email": "me@me.com"
+	},
+	"files": [
+		"lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
+		"style/**/*.{css,js,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
+	],
+	"main": "lib/index.js",
+	"style": "style/index.css",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/github_username/ml-platform-extensions.git"
+	},
+	"scripts": {
+		"build": "npm run build:labextension:dev",
+		"build:prod": "npm run build:labextension",
+		"build:labextension": "jupyter labextension build .",
+		"build:labextension:dev": "jupyter labextension build --development True .",
+		"clean:labextension": "rimraf ml-platform-extensions/labextension",
+		"clean:all": "npm run clean:labextension",
+		"prepare": "npm run build:prod",
+		"watch": "npm run watch:labextension",
+		"watch:labextension": "jupyter labextension watch ."
+	},
+	"dependencies": {
+		"@jupyterlab/application": "^3.6.1",
+		"@jupyterlab/apputils": "^3.6.1",
+		"@jupyterlab/notebook": "^3.6.1",
+		"@jupyterlab/services": "^6.6.1",
+		"@jupyterlab/terminal": "^3.6.1",
+		"@jupyterlab/ui-components": "^3.6.1",
+		"child_process": "^1.0.2"
+	},
+	"devDependencies": {
+		"@jupyterlab/builder": "^3.0.0",
+		"rimraf": "^3.0.2"
+	},
+	"browser": {
+		"child_process": false
+	},
+	"sideEffects": [
+		"style/*.css",
+		"style/index.js"
+	],
+	"styleModule": "style/index.js",
+	"jupyterlab": {
+		"extension": true,
+		"outputDir": "ml-platform-extensions/labextension"
+	}
+}
