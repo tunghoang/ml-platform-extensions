@@ -1,0 +1,81 @@
+{
+	"name": "ml-platform-time-execute",
+	"version": "0.1.0",
+	"description": "A JupyterLab extension.",
+	"keywords": [
+		"jupyter",
+		"jupyterlab",
+		"jupyterlab-extension"
+	],
+	"homepage": "https://github.com/github_username/ml-platform-time-execute",
+	"bugs": {
+		"url": "https://github.com/github_username/ml-platform-time-execute/issues"
+	},
+	"license": "BSD-3-Clause",
+	"author": {
+		"name": "MrYasuo",
+		"email": "me@me.com"
+	},
+	"files": [
+		"lib/**/*.{d.ts,eot,gif,html,jpg,js,jsx,js.map,json,png,svg,woff2,ttf}",
+		"style/**/*.{css,js,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
+	],
+	"main": "lib/index.js",
+	"style": "style/index.css",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/github_username/ml-platform-time-execute.git"
+	},
+	"scripts": {
+		"build": "npm run build:labextension:dev",
+		"build:prod": "npm run build:labextension",
+		"build:labextension": "jupyter labextension build .",
+		"build:labextension:dev": "jupyter labextension build --development True .",
+		"clean:labextension": "rimraf ml-platform-time-execute/labextension",
+		"clean:all": "npm run clean:labextension",
+		"prepare": "npm run build:prod",
+		"watch": "npm run watch:labextension",
+		"watch:labextension": "jupyter labextension watch ."
+	},
+	"dependencies": {
+		"@jupyterlab/application": "^3.6.1",
+		"@jupyterlab/apputils": "^3.6.1",
+		"@jupyterlab/fileeditor": "^3.6.1",
+		"@jupyterlab/mainmenu": "^3.6.1",
+		"@jupyterlab/notebook": "^3.6.1",
+		"@jupyterlab/services": "^6.6.1",
+		"@jupyterlab/terminal": "^3.6.1",
+		"@jupyterlab/ui-components": "^3.6.1",
+		"babel-preset-es2015": "^6.24.1",
+		"luxon": "^3.2.1",
+		"react": "^18.2.0"
+	},
+	"browserslist": [
+		">0.2%",
+		"not dead",
+		"not op_mini all"
+	],
+	"devDependencies": {
+		"@babel/core": "^7.20.12",
+		"@babel/preset-env": "^7.20.2",
+		"@babel/preset-react": "^7.18.6",
+		"@jupyterlab/builder": "^3.6.1",
+		"babel-loader": "^9.1.2",
+		"html-webpack-plugin": "^5.5.0",
+		"rimraf": "^4.1.2",
+		"webpack": "^5.75.0",
+		"webpack-bundle-analyzer": "^4.8.0"
+	},
+	"browser": {
+		"child_process": false
+	},
+	"sideEffects": [
+		"style/*.css",
+		"style/index.js"
+	],
+	"styleModule": "style/index.js",
+	"jupyterlab": {
+		"extension": true,
+		"outputDir": "ml-platform-time-execute/labextension"
+	}
+}
