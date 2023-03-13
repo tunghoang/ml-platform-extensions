@@ -1,14 +1,3 @@
-html,
-body {
-	height: 100%;
-}
-
-body {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
 .spinner {
 	-webkit-animation: rotator 1.4s linear infinite;
 	animation: rotator 1.4s linear infinite;
