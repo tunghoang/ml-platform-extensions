@@ -1,3 +1,10 @@
+npm run build:pre
+npm run build
+python -m build
+pip install dist/*.whl
+
+
+
 # ml-platform-converter
 
 ![Github Actions Status](https://github.com/github_username/ml-platform-converter/workflows/Build/badge.svg)
