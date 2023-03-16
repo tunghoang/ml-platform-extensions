@@ -1,16 +1,15 @@
-const { ToolbarButton, ICommandPalette } = require("@jupyterlab/apputils");
-const { INotebookTracker } = require("@jupyterlab/notebook");
-const { Widget } = require("@lumino/widgets");
-const { JSONExt } = require("@lumino/coreutils");
-const { checkIcon, closeIcon } = require("@jupyterlab/ui-components");
-const {
+import { ICommandPalette } from "@jupyterlab/apputils";
+import { INotebookTracker } from "@jupyterlab/notebook";
+import { Widget } from "@lumino/widgets";
+import { JSONExt } from "@lumino/coreutils";
+import { checkIcon, closeIcon } from "@jupyterlab/ui-components";
+import {
 	JupyterFrontEnd,
 	JupyterFrontEndPlugin,
-} = require("@jupyterlab/application");
-const { LabIcon } = require("@jupyterlab/ui-components");
-const configs = require("../configs.json");
-const { DateTime } = require("luxon");
-const {
+} from "@jupyterlab/application";
+import { LabIcon } from "@jupyterlab/ui-components";
+import { DateTime } from "luxon";
+import {
 	HISTORY_MAX_LENGTH,
 	ANIMATE_CSS,
 	EXECUTE_TIME_CLASS,
@@ -18,82 +17,7 @@ const {
 	TOOLTIP_PREFIX,
 	_settings,
 	PREV_DATA_EXECUTION_TIME_ATTR,
-} = require("./constants");
-
-/**
- * @type {JupyterFrontEndPlugin}
- */
-// const externalVoilaPlugin = {
-// 	id: "jupyterlab-external-voila",
-// 	autoStart: true,
-// 	requires: [INotebookTracker],
-// 	/**
-// 	 *
-// 	 * @param {JupyterFrontEnd} app
-// 	 * @param {NotebookTracker} notebookTracker
-// 	 */
-// 	activate: (app, notebookTracker) => {
-// 		console.log("JupyterLab extension jupyterlab-external-voila is activated!");
-// 		const { commands } = app;
-// 		const button = new ToolbarButton({
-// 			label: "Voila external",
-// 			onClick: async () => {
-// 				const path = notebookTracker.currentWidget.context.path;
-// 				let t = await commands.execute("terminal:create-new");
-// 				let terminal = t.content;
-// 				terminal.session.send({
-// 					type: "stdin",
-// 					content: [`voila ${path}\n\r`],
-// 				});
-// 			},
-// 		});
-// 		notebookTracker.currentChanged.connect((sender, panel) => {
-// 			panel.toolbar.insertItem(10, "voilaExternal", button);
-// 		});
-// 	},
-// 	commands.addCommand("notebook:time-execute", {
-// 		label: "Show time execute",
-// 		execute: async (cell) => {
-// 			console.log(cell);
-// 			const cellNode = cell.cellNode;
-// 			const parent = cellNode.parentElement;
-// 			const _child = parent.querySelector(".CodeMirror");
-// 			if (!_child.querySelector(".query__icon")) {
-// 				const executionTime = document.createElement("div");
-// 				executionTime.className = "execution-time";
-// 				executionTime.innerHTML = `<div style="margin-right: 4px" class='query__icon'></div><div><span class='query-time'></span></div>`;
-// 				_child.appendChild(executionTime);
-// 			}
-// 			const executionTime = _child.querySelector(".execution-time");
-// 			const queryIcon = executionTime.querySelector(".query__icon");
-// 			const queryTime = executionTime.querySelector(".query-time");
-// 			queryIcon.innerHTML = `<div><svg class="spinner" width="16px" height="16px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
-// 			<circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle></svg></div>`;
-// 			let time = 0.1;
-// 			while (cellNode.innerText === "[*]:") {
-// 				time += 0.1;
-// 				queryTime.innerHTML = `${time.toFixed(2)}s`;
-// 				await sleep(100);
-// 			}
-// 			queryIcon.innerHTML = checkIcon.element().outerHTML;
-// 		},
-// 	});
-// 	$("button[data-command='runmenu:run']").addEventListener(
-// 		"click",
-// 		(e) => {
-// 			e.preventDefault();
-// 			commands.execute("notebook:time-execute", {
-// 				cellNode: document.evaluate(
-// 					"//div[text()='[*]:']",
-// 					document,
-// 					null,
-// 					XPathResult.FIRST_ORDERED_NODE_TYPE,
-// 					null
-// 				).singleNodeValue,
-// 			});
-// 		}
-// 	);
-// };
+} from "./constants";
 
 const spinnerIcon = new LabIcon({
 	name: "spin",
@@ -314,12 +238,11 @@ class ShowTimeExecuteWidget extends Widget {
 const showTimeExecutePlugin = {
 	id: "jupyterlab-show-time-execute",
 	autoStart: true,
-	requires: [INotebookTracker, ICommandPalette],
+	requires: [INotebookTracker],
 	/**
 	 *
 	 * @param {JupyterFrontEnd} app
 	 * @param {INotebookTracker} notebookTracker
-	 * @param {ISettingRegistry} settingRegistry
 	 */
 	activate: (app, notebookTracker) => {
 		console.log(
@@ -331,46 +254,5 @@ const showTimeExecutePlugin = {
 		);
 	},
 };
-/**
- * @type {JupyterFrontEndPlugin}
- */
-const autoButtonsPlugin = {
-	id: "jupyterlab-auto-buttons",
-	autoStart: true,
-	requires: [INotebookTracker, ICommandPalette],
-	/**
-	 *
-	 * @param {JupyterFrontEnd} app
-	 * @param {INotebookTracker} notebookTracker
-	 * @param {ICommandPalette} palette
-	 */
-	activate: (app, notebookTracker, palette) => {
-		notebookTracker.currentChanged.connect((sender, notebookPanel) => {
-			notebookPanel.context.ready.then(() => {
-				configs.forEach((config) => {
-					const buttoncfg = {
-						label: config.label,
-						onClick: async () => {
-							const path = notebookPanel.context.path;
-							let t = await app.commands.execute(config.command);
-						},
-					};
-					if (config.icon) {
-						buttoncfg.icon = new LabIcon({
-							name: config.name,
-							svgstr: config.icon,
-						});
-						delete buttoncfg.label;
-					}
-					const button = new ToolbarButton(buttoncfg);
-					notebookPanel.toolbar.insertItem(10, config.name, button);
-				});
-			});
-		});
-	},
-};
 
-module.exports = [
-	// externalVoilaPlugin,
-	showTimeExecutePlugin,
-];
+export default showTimeExecutePlugin;
