@@ -12,10 +12,7 @@ const commands = [
 		command: (currentFilePath, port) =>
 			`bash /opt/tljh/scripts/export-service.sh ${currentFilePath} ${port} && exit\n\r`,
 		dialog: {
-			inputs: [
-				{ name: "port", type: "number" },
-				{ name: "name", type: "text" },
-			],
+			inputs: [{ name: "port", type: "number" }],
 		},
 	},
 ];

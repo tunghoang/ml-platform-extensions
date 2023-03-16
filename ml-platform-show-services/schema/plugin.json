@@ -1,0 +1,20 @@
+{
+	"title": "JupyterLab Example Extension",
+	"description": "An example extension for JupyterLab.",
+	"jupyter.lab.menus": {
+		"main": [
+			{
+				"id": "jp-show-services",
+				"label": "Customization",
+				"rank": 80,
+				"items": [
+					{
+						"command": "jlab:open-services-dashboard"
+					}
+				]
+			}
+		]
+	},
+	"additionalProperties": false,
+	"type": "object"
+}

@@ -111,3 +111,4 @@ dmypy.json
 .venv
 labextension
 ml-platform-converter/lib
+ml-platform-show-services/lib

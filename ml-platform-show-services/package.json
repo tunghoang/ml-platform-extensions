@@ -1,0 +1,84 @@
+{
+	"name": "ml-platform-show-services",
+	"version": "0.1.0",
+	"description": "A JupyterLab extension.",
+	"keywords": [
+		"jupyter",
+		"jupyterlab",
+		"jupyterlab-extension"
+	],
+	"homepage": "https://github.com/github_username/ml-platform-show-services",
+	"bugs": {
+		"url": "https://github.com/github_username/ml-platform-show-services/issues"
+	},
+	"license": "BSD-3-Clause",
+	"author": {
+		"name": "My Name",
+		"email": "me@me.com"
+	},
+	"files": [
+		"lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
+		"schema/**/*.{json}",
+		"style/**/*.{css,js,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
+	],
+	"main": "lib/index.js",
+	"style": "style/index.css",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/github_username/ml-platform-show-services.git"
+	},
+	"scripts": {
+		"build": "npm run build:pre && npm run build:labextension:dev",
+		"build:pre": "babel src -d lib",
+		"build:prod": "npm run build:labextension",
+		"build:labextension": "jupyter labextension build .",
+		"build:labextension:dev": "jupyter labextension build --development True .",
+		"clean:labextension": "rimraf ml-platform-show-services/labextension",
+		"clean:all": "npm run clean:labextension",
+		"_prepare": "npm run build:prod",
+		"test": "babel src --out-dir lib",
+		"watch:pre": "nodemon --watch src/ --exec \"babel-node --presets @babel/preset-env,@babel/preset-react src/widget.jsx --out-file lib/widget.js -- lib/widget.js\"",
+		"watch": "npm run watch:labextension",
+		"watch:labextension": "jupyter labextension watch ."
+	},
+	"dependencies": {
+		"@jupyterlab/application": "^3.6.1",
+		"@jupyterlab/apputils": "^3.6.1",
+		"@jupyterlab/launcher": "^3.6.1",
+		"@jupyterlab/ui-components": "^3.6.1",
+		"antd": "^5.3.1"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.21.0",
+		"@babel/node": "^7.20.7",
+		"@babel/preset-env": "^7.20.2",
+		"@babel/preset-react": "^7.18.6",
+		"@jupyterlab/builder": "^3.6.1",
+		"babel-watch": "^7.7.2",
+		"nodemon": "^2.0.21",
+		"rimraf": "^4.4.0"
+	},
+	"sideEffects": [
+		"style/*.css",
+		"style/index.js"
+	],
+	"styleModule": "style/index.js",
+	"babel": {
+		"presets": [
+			[
+				"@babel/preset-env"
+			],
+			[
+				"@babel/preset-react",
+				{
+					"runtime": "automatic"
+				}
+			]
+		]
+	},
+	"jupyterlab": {
+		"extension": true,
+		"outputDir": "ml-platform-show-services/labextension",
+		"schemaDir": "schema"
+	}
+}
