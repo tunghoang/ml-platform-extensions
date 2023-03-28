@@ -110,5 +110,4 @@ dmypy.json
 .DS_Store
 .venv
 labextension
-ml-platform-converter/lib
-ml-platform-show-services/lib
+lib
