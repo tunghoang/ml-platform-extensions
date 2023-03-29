@@ -2,26 +2,43 @@ import { ReactWidget } from "@jupyterlab/apputils";
 import { Table, Tag } from "antd";
 import { useEffect, useState } from "react";
 
-const API_ENDPOINT = "http://localhost:5000/services";
+const API_ENDPOINT = window.location.origin + ":5000/services";
 
 const columns = [
+	{
+		title: "Route",
+		dataIndex: "others",
+		key: "others",
+		align: "left",
+    render: (_, obj) => {
+      let tokens = obj.name.split('/');
+      let shortName = tokens.pop();
+      shortName = shortName.replace(".", "_");
+      let others = JSON.parse(obj.others);
+      return (<a href={`${window.location.origin}:${others.port}/${shortName}/`}>/{shortName}/</a>)
+    }
+	},
+  {
+    title: "Port",
+    dataIndex: "others",
+    key: "others",
+    align: "left",
+    render: (_, obj) => {
+      let others = JSON.parse(obj.others);
+      return (<span>{others.port}</span>)
+    }
+  },
 	{
 		title: "Name",
 		dataIndex: "name",
 		key: "name",
-		align: "center",
+		align: "left",
 	},
 	{
 		title: "Type",
 		dataIndex: "type",
 		key: "type",
-		align: "center",
-	},
-	{
-		title: "Others",
-		dataIndex: "others",
-		key: "others",
-		align: "center",
+		align: "left",
 	},
 	{
 		title: "Action",
@@ -33,30 +50,40 @@ const columns = [
 				return (
 					<Tag
 						color="red"
-						style={{ width: "100%", cursor: "pointer", textAlign: "center" }}
+						style={{ cursor: "pointer", textAlign: "center" }}
 						onClick={async () => {
-							await fetch(`${API_ENDPOINT}/${id}`, {
+							let newData = await fetch(`${API_ENDPOINT}/${id}`, {
 								method: "DELETE",
 							});
-							setData(data.filter((d) => d.id !== id));
+              newData = await newData.json();
+              // console.log(newData);
+							// setData(newData);
 						}}>
 						Delete
 					</Tag>
 				);
 		},
-		align: "center",
+		align: "right",
 	},
 ];
 
 const ServicesTableComponent = () => {
 	const [data, setData] = useState([]);
+  const [count, setCount] = useState(0);
 	useEffect(() => {
+    console.log("Reload services");
 		(async () => {
 			const res = await fetch(API_ENDPOINT);
 			const data = await res.json();
 			setData(data);
+      setTimeout(function() {
+        let _count = count + 1;
+        console.log(count);
+        setCount(_count);
+      } , 3000);
 		})();
-	}, []);
+	}, [count]);
+
 	return (
 		<div style={{ padding: "20px" }}>
 			<Table
@@ -66,7 +93,7 @@ const ServicesTableComponent = () => {
 				size="small"
 				title={() => (
 					<div style={{ textAlign: "center" }}>
-						<b>Services</b>
+						<h2>SERVICES</h2>
 					</div>
 				)}></Table>
 		</div>

@@ -26,6 +26,12 @@ const fileContextMenuPlugin = {
     const {
       tracker
     } = factory;
+    function getCurrentDir() {
+      // return window.location.pathname.replace('/user/admin/lab', "").replace("/tree", "");
+      const paths = window.location.pathname.split("/");
+      if (paths.includes("tree")) return `${paths.at(-1)}`;
+      return "";
+    }
     commandList.forEach(command => {
       commands.addCommand(command.name, {
         label: command.label,
@@ -35,21 +41,24 @@ const fileContextMenuPlugin = {
           if (command.dialog) {
             const values = await renderDialog(command.label, command.dialog.inputs);
             const {
-              port,
-              name
+              port
             } = values;
+            const process = await serviceManager.terminals.startNew();
+            console.log("currentFile", currentSelectedFile, currentSelectedFile.path);
+            console.log("Dir", getCurrentDir());
+            console.log("Port", port);
+            process.send({
+              type: "stdin",
+              content: [command.command(currentSelectedFile.path, getCurrentDir(), port)]
+            });
+          } else {
             const process = await serviceManager.terminals.startNew();
             process.send({
               type: "stdin",
-              content: [command.command(currentSelectedFile.path, port)]
+              content: [command.command(currentSelectedFile.path, getCurrentDir())]
             });
-            return;
           }
-          const process = await serviceManager.terminals.startNew();
-          process.send({
-            type: "stdin",
-            content: [command.command(currentSelectedFile.path)]
-          });
+          return;
         }
       });
       app.contextMenu.addItem({
