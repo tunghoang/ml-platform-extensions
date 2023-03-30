@@ -1,0 +1,11 @@
+[Unit]
+Description=ML Platform service dashboard
+
+[Service]
+User=jupyter-admin
+WorkingDirectory=/home/jupyter-admin/ml-platform-extensions/ml-platform-show-services
+ExecStart=/opt/tljh/user/bin/python server/app.py
+
+[Install]
+WantedBy=multi-user.target
+
