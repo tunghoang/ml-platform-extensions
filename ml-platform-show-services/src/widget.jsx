@@ -1,75 +1,39 @@
 import { ReactWidget } from "@jupyterlab/apputils";
-import { Table, Tag } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useContext } from "react";
+import { Space } from "antd";
 
-const API_ENDPOINT = "http://localhost:5000/services";
-
-const columns = [
-	{
-		title: "Name",
-		dataIndex: "name",
-		key: "name",
-		align: "center",
-	},
-	{
-		title: "Type",
-		dataIndex: "type",
-		key: "type",
-		align: "center",
-	},
-	{
-		title: "Others",
-		dataIndex: "others",
-		key: "others",
-		align: "center",
-	},
-	{
-		title: "Action",
-		dataIndex: "deleted",
-		key: "deleted",
-		render: (_, data) => {
-			const { id, deleted } = data;
-			if (!deleted)
-				return (
-					<Tag
-						color="red"
-						style={{ width: "100%", cursor: "pointer", textAlign: "center" }}
-						onClick={async () => {
-							await fetch(`${API_ENDPOINT}/${id}`, {
-								method: "DELETE",
-							});
-							setData(data.filter((d) => d.id !== id));
-						}}>
-						Delete
-					</Tag>
-				);
-		},
-		align: "center",
-	},
-];
+import { CustomTable, LoginForm } from "@/components";
+import { appContext, AppContextProvider } from "@/contexts";
+import { API_ENDPOINT } from "@/constants";
 
 const ServicesTableComponent = () => {
-	const [data, setData] = useState([]);
+	const { setData, isAuthenticated, setIsAuthenticated } =
+		useContext(appContext);
 	useEffect(() => {
 		(async () => {
-			const res = await fetch(API_ENDPOINT);
-			const data = await res.json();
-			setData(data);
+			const res = await fetch(`${API_ENDPOINT}/auth`, {
+				credentials: "include",
+			});
+			if (res.status === 200) setIsAuthenticated(true);
 		})();
 	}, []);
+	useEffect(() => {
+		if (isAuthenticated) {
+			(async () => {
+				const res = await fetch(`${API_ENDPOINT}/services`, {
+					credentials: "include",
+				});
+				const data = await res.json();
+				setData(data);
+			})();
+		}
+	}, []);
 	return (
-		<div style={{ padding: "20px" }}>
-			<Table
-				columns={columns}
-				dataSource={data}
-				bordered
-				size="small"
-				title={() => (
-					<div style={{ textAlign: "center" }}>
-						<b>Services</b>
-					</div>
-				)}></Table>
-		</div>
+		<Space
+			style={{ padding: "20px", width: "100%", height: "100%" }}
+			direction="vertical">
+			{isAuthenticated ? <CustomTable /> : <LoginForm />}
+		</Space>
 	);
 };
 
@@ -80,6 +44,10 @@ export class ServicesTableWidget extends ReactWidget {
 	}
 
 	render() {
-		return <ServicesTableComponent />;
+		return (
+			<AppContextProvider>
+				<ServicesTableComponent />
+			</AppContextProvider>
+		);
 	}
 }
