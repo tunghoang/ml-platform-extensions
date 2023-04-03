@@ -4,6 +4,7 @@ import { Space, message } from "antd";
 
 import { CustomTable, LoginForm } from "@/components";
 import { appContext, AppContextProvider } from "@/contexts";
+import { API_ENDPOINT } from "@/constants";
 
 const columns = [
 	{
@@ -76,7 +77,6 @@ const ServicesTableComponent = () => {
 	const { setData, isAuthenticated, setIsAuthenticated } =
 		useContext(appContext);
 	const [messageApi, contextHolder] = message.useMessage();
-	const API_ENDPOINT = `${window.location.protocol}//${window.location.hostname}:5000`;
 	const [count, setCount] = useState(0);
 	useLayoutEffect(() => {
 		const tryAuth = async () => {
