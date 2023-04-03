@@ -8,7 +8,6 @@ const LoginForm = () => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const { setIsAuthenticated } = useContext(appContext);
-	console.log(process.env);
 
 	const handleLogin = async (username, password) => {
 		let res = await fetch(`${API_ENDPOINT}/auth/login`, {
