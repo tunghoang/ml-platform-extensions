@@ -1,4 +1,4 @@
-from flask import Flask, g, request, make_response, jsonify
+from flask import Flask, g, request, make_response
 from flask_cors import CORS
 from flask_argon2 import Argon2
 import sqlite3
@@ -21,7 +21,7 @@ app.config["JWT_COOKIE_CSRF_PROTECT"] = False
 jwt = JWTManager(app)
 
 argon2 = Argon2(app)
-CORS(app, supports_credentials=True, origins="http://localhost:8888")
+CORS(app, supports_credentials=True, origins="*")
 
 
 def dict_factory(cursor, row):
