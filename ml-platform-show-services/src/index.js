@@ -35,7 +35,6 @@ const showServicesPlugin = {
 
 		let tracker = new WidgetTracker({ namespace: "services" });
 		let widget;
-		console.log(process.env);
 
 		const { commands } = app;
 		const command = "jlab:open-services-dashboard";

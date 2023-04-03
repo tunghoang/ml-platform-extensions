@@ -1,6 +1,6 @@
 import { ReactWidget } from "@jupyterlab/apputils";
-import { useEffect, useContext, useState } from "react";
-import { Space } from "antd";
+import { useEffect, useContext, useLayoutEffect, useState } from "react";
+import { Space, message } from "antd";
 
 import { CustomTable, LoginForm } from "@/components";
 import { appContext, AppContextProvider } from "@/contexts";
@@ -75,21 +75,40 @@ const columns = [
 const ServicesTableComponent = () => {
 	const { setData, isAuthenticated, setIsAuthenticated } =
 		useContext(appContext);
-	const API_ENDPOINT = window.location.origin + ":5000/services";
+	const [messageApi, contextHolder] = message.useMessage();
+	const API_ENDPOINT = `${window.location.protocol}//${window.location.hostname}:5000`;
 	const [count, setCount] = useState(0);
-	useEffect(() => {
-		(async () => {
-			const res = await fetch(`${API_ENDPOINT}/auth`, {
+	useLayoutEffect(() => {
+		const tryAuth = async () => {
+			let res = await fetch(`${API_ENDPOINT}/auth`, {
 				credentials: "include",
 			});
-			if (res.status === 200) setIsAuthenticated(true);
-		})();
+			if (res.status === 200) {
+				setIsAuthenticated(true);
+				messageApi.success("Login successful", 1);
+				return;
+			}
+			res = await res.json();
+			await messageApi.error(res.msg, 0.5);
+			await messageApi.info("Trying login again...", 0.5);
+			let _res = await fetch(`${API_ENDPOINT}/auth/login/default`, {
+				credentials: "include",
+			});
+			if (_res.status === 200) {
+				setIsAuthenticated(true);
+				messageApi.success("Login successful", 1);
+				return;
+			}
+			_res = await _res.json();
+			messageApi.error(_res.msg);
+		};
+		tryAuth();
 	}, []);
 	useEffect(() => {
 		if (isAuthenticated) {
 			(async () => {
 				console.log("Reload services");
-				const res = await fetch(API_ENDPOINT, {
+				const res = await fetch(`${API_ENDPOINT}/services`, {
 					credentials: "include",
 				});
 				const data = await res.json();
@@ -103,11 +122,14 @@ const ServicesTableComponent = () => {
 		}
 	}, [count]);
 	return (
-		<Space
-			style={{ padding: "20px", width: "100%", height: "100%" }}
-			direction="vertical">
-			{isAuthenticated ? <CustomTable /> : <LoginForm />}
-		</Space>
+		<>
+			{contextHolder}
+			<Space
+				style={{ padding: "20px", width: "100%", height: "100%" }}
+				direction="vertical">
+				{isAuthenticated ? <CustomTable /> : <LoginForm />}
+			</Space>
+		</>
 	);
 };
 
