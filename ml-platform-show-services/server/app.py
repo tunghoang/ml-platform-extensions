@@ -19,6 +19,7 @@ app = Flask(__name__, )
 app.config["JWT_SECRET_KEY"] = "super-secret"
 app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
 app.config["JWT_ACCESS_COOKIE_NAME"] = "access_token"
+app.config["JWT_COOKIE_SAMESITE"] = "None"
 app.config["JWT_COOKIE_CSRF_PROTECT"] = False
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = datetime.timedelta(weeks=1)
 jwt = JWTManager(app)
