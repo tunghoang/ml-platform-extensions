@@ -1,4 +1,4 @@
-from flask import Flask, g, request, make_response
+from flask import Flask, g, request, make_response, jsonify
 from flask_cors import CORS
 from flask_argon2 import Argon2
 import sqlite3
@@ -84,12 +84,12 @@ def login_default():
 	env_user = os.environ.get("UNAME")
 	env_pass = os.environ.get("PASSWD")
 	if env_user is None or env_pass is None:
-		return 'Username or password not found in environment', 401
+		return jsonify({"msg": "Username or password not found in environment"}), 401
 	user = query_db("select * from users where username = ?", [env_user], True)
 	if user is None:
-		return 'User not found', 404
+		return jsonify({"msg": "User not found"}), 404
 	if not argon2.check_password_hash(user['password'], env_pass):
-		return 'Wrong username or password', 401
+		return jsonify({"msg": "Wrong username or password"}), 401
 	access_token = create_access_token(identity=env_user)
 	res = make_response('OK')
 	set_access_cookies(res, access_token)
@@ -134,4 +134,4 @@ def delete_service(service_id):
 
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run(host="0.0.0.0", port=5000)
