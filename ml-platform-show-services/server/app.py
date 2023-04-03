@@ -83,6 +83,8 @@ def login():
 def login_default():
 	env_user = os.environ.get("UNAME")
 	env_pass = os.environ.get("PASSWD")
+	print(env_user)
+	print(env_pass)
 	if env_user is None or env_pass is None:
 		return jsonify({"msg": "Username or password not found in environment"}), 401
 	user = query_db("select * from users where username = ?", [env_user], True)
