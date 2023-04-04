@@ -120,7 +120,7 @@ const ServicesTableComponent = () => {
 				}, 3000);
 			})();
 		}
-	}, [count]);
+	}, [count, isAuthenticated]);
 	return (
 		<>
 			{contextHolder}
