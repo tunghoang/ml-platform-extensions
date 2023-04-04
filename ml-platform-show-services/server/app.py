@@ -11,6 +11,9 @@ import subprocess
 from flask_jwt_extended import (create_access_token, get_jwt, get_jwt_header, get_jwt_identity, jwt_required, JWTManager, set_access_cookies, verify_jwt_in_request)
 import json
 from shell_utils import remove_service
+from dotenv import load_dotenv
+
+load_dotenv(subprocess.check_output(["echo $HOME"], shell=True).decode("utf-8").strip() + "/.env")
 
 BASEDIR = os.path.dirname(os.path.abspath(__file__))
 DATABASE = os.path.join(BASEDIR, 'service.db')
@@ -84,7 +87,6 @@ def login():
 def login_default():
 	env_user = os.environ.get("UNAME")
 	env_pass = os.environ.get("PASSWD")
-	subprocess.check_call("pwd", shell=True)
 	print(env_user)
 	print(env_pass)
 	if env_user is None or env_pass is None:
