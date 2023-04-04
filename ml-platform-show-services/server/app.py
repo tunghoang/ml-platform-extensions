@@ -6,6 +6,7 @@ import os.path
 from operator import itemgetter
 import os
 import datetime
+import subprocess
 
 from flask_jwt_extended import (create_access_token, get_jwt, get_jwt_header, get_jwt_identity, jwt_required, JWTManager, set_access_cookies, verify_jwt_in_request)
 import json
@@ -83,6 +84,7 @@ def login():
 def login_default():
 	env_user = os.environ.get("UNAME")
 	env_pass = os.environ.get("PASSWD")
+	subprocess.check_call("pwd", shell=True)
 	print(env_user)
 	print(env_pass)
 	if env_user is None or env_pass is None:
