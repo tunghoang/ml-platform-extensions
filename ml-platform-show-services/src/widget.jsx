@@ -100,7 +100,7 @@ const ServicesTableComponent = () => {
 				return;
 			}
 			_res = await _res.json();
-			messageApi.error(_res.msg);
+			messageApi.error(_res.msg, 1);
 		};
 		tryAuth();
 	}, []);
