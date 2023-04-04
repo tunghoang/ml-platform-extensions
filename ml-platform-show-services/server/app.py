@@ -74,9 +74,9 @@ def login():
 	username, password = itemgetter("username", "password")(request.get_json())
 	user = query_db("select * from users where username = ?", [username], True)
 	if user is None:
-		return 'User not found', 404
+		return jsonify({"msg": "User not found"}), 404
 	if not argon2.check_password_hash(user['password'], password):
-		return 'Wrong username or password', 401
+		return jsonify({"msg": "Wrong username or password"}), 401
 	access_token = create_access_token(identity=username)
 	res = make_response('OK')
 	set_access_cookies(res, access_token)
