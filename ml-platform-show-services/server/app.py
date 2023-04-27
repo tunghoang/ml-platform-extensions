@@ -28,7 +28,7 @@ app.config["JWT_ACCESS_TOKEN_EXPIRES"] = datetime.timedelta(weeks=1)
 jwt = JWTManager(app)
 
 argon2 = Argon2(app)
-CORS(app, supports_credentials=True, origins="*")
+CORS(app, supports_credentials=True, origins="*", methods=["GET", "HEAD", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"])
 
 
 def dict_factory(cursor, row):
